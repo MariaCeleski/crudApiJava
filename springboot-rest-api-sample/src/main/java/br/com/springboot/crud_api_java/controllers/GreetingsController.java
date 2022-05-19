@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,7 +24,7 @@ import br.com.sprinhboot.crus_api_java.model.Usuario;
 @RestController
 public class GreetingsController {
 	
-	@Autowired/*IC/CD ouCDI - Injeção de dependencia*/
+	@Autowired /*IC/CD ouCDI - Injeção de dependencia*/
 	private UsuarioRepository usuarioRepository;
 	
     /**
@@ -51,8 +53,24 @@ public class GreetingsController {
     @ResponseBody /*Retorna os dados para o corpo da resposta*/
     public ResponseEntity<List<Usuario> listaUsuario(){
     	
-    	List <Usuario> usuarios = usuarioRepository.findAll();/*executa a consulta no banco de dados*/
+    	List<Usuario> usuarios = usuarioRepository.findAll();/*executa a consulta no banco de dados*/
     	
     	return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK);/*Retorna a lista em JSON*/
+    }
+    
+    
+    @PostMapping(value = "salvar")/*mapeia a url*/
+    @ResponseBody /*Descrição da resposta*/
+    public ResponseEntity<Usuario> salvar(RequestBody Usuario usuario){/*Recebe os dados para salvar*/
+    	Usuario user = usuarioRepository.save(usuario);
+    	return new ResponseEntity<Usuario>(user, HttpStatus.CREATED);
+    }	  	
+    
+    @DeleteMapping(value = "delete")/*mapeia a url*/
+    @ResponseBody /*Descrição da resposta*/
+    public ResponseEntity<String> delete(RequestParam Long iduser){/*Recebe os dados para salvar*/
+    	usuarioRepository.deleteById(Iduser);
+    	return new ResponseEntity<String>("user deletado com sucesso", HttpStatus.Ok);
+    	
     }
 }
